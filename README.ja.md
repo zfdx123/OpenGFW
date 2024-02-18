@@ -5,6 +5,8 @@
 [1]: https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg
 [2]: LICENSE
 
+Telegram グループ: https://t.me/OpGFW
+
 OpenGFW は、Linux 上の [GFW](https://en.wikipedia.org/wiki/Great_Firewall) の柔軟で使いやすいオープンソース実装であり、多くの点で本物より強力です。これは家庭用ルーターでできるサイバー主権です。
 
 > [!CAUTION]
@@ -16,7 +18,7 @@ OpenGFW は、Linux 上の [GFW](https://en.wikipedia.org/wiki/Great_Firewall) �
 ## 特徴
 
 - フル IP/TCP 再アセンブル、各種プロトコルアナライザー
-  - HTTP、TLS、DNS、SSH、SOCKS4/5、WireGuard、その他多数
+  - HTTP、TLS、QUIC、DNS、SSH、SOCKS4/5、WireGuard、その他多数
   - Shadowsocks の「完全に暗号化されたトラフィック」の検出など (https://gfw.report/publications/usenixsecurity23/data/paper/paper.pdf)
   - トロイの木馬キラー (https://github.com/XTLS/Trojan-killer) に基づくトロイの木馬 (プロキシプロトコル) 検出
   - [WIP] 機械学習に基づくトラフィック分類
@@ -75,6 +77,12 @@ workers:
   tcpMaxBufferedPagesTotal: 4096
   tcpMaxBufferedPagesPerConn: 64
   udpMaxStreams: 4096
+
+# 特定のローカルGeoIP / GeoSiteデータベースファイルを読み込むためのパス。
+# 設定されていない場合は、https://github.com/LoyalSoldier/v2ray-rules-dat から自動的にダウンロードされます。
+# geo:
+#   geoip: geoip.dat
+#   geosite: geosite.dat
 ```
 
 ### ルール例
@@ -91,6 +99,10 @@ workers:
 - name: block v2ex https
   action: block
   expr: string(tls?.req?.sni) endsWith "v2ex.com"
+
+- name: block v2ex quic
+  action: block
+  expr: string(quic?.req?.sni) endsWith "v2ex.com"
 
 - name: block shadowsocks
   action: block
